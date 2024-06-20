@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Price Forecasting</title>
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>BBRI Stock Price Forecasting</h1>
+        <form id="forecast-form">
+            <label for="date">Select Date:</label>
+            <input type="date" id="date" name="date" required>
+            <button type="submit">Forecast</button>
+        </form>
+        <div id="result"></div>
+    </div>
+    <script>
+        document.getElementById('forecast-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var date = document.getElementById('date').value;
+            fetch('/forecast', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ date: date }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('result').innerText = data.error;
+                } else {
+                    document.getElementById('result').innerText = 'Forecasted Price: ' + data.forecasted_price;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
